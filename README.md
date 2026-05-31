@@ -1,105 +1,113 @@
-# SlopEdge
+# Slop Edge 🎯
 
-Your competitors use AI too. Make sure yours doesn't sound like it.
+**Your competitors use AI too. Make sure yours doesn't sound like it.**
 
-Paste your text. Get scored on 10 dimensions. Fix AI patterns before you publish.
+Slop Edge is an AI content detection tool that scores text across 10 dimensions to identify AI-generated writing patterns. It's designed for content creators, bloggers, and developers who want to maintain authentic, human-sounding content.
 
-## What is this?
+## 🚀 Live Demo
 
-SlopEdge analyzes your writing and detects common AI-generated patterns, structural cliches, and weak prose. It scores your text on 10 dimensions and can identify which AI model likely generated the text (GPT, Claude, Gemini).
+**https://slop-edge.vercel.app**
 
-Works with English and Indonesian text. Auto-detects language.
+## ✨ Features
 
-Built by merging detection rules from 4 open-source projects:
-- [stop-slop](https://github.com/hardikpandya/stop-slop) — 29 banned phrases
-- [claude-slop-detector](https://github.com/aplaceforallmystuff/claude-slop-detector) — 3-tier scoring, structural tells
-- [humanize-writing-skill](https://github.com/lguz/humanize-writing-skill) — 51 banned words, 10 structural patterns
-- [slop-cop](https://github.com/MahmoudHalat/slop-cop) — 45 rhetorical patterns, ~150 vocabulary tells, dual-axis scoring
+- **10-Dimension Scoring System** — Vocabulary, Banned Phrases, Structure, Rhythm, Voice, Density, Formatting, Readability, Originality, Specificity
+- **Indonesian Language Support** — Full detection for Indonesian AI patterns (ChatGPT, Gemini, Claude)
+- **Casual Authenticity Detection** — Detects AI "trying too hard to be casual" in informal Indonesian text
+- **Model Fingerprints** — Identifies GPT/Claude/Gemini specific patterns
+- **Real-time Analysis** — Instant feedback with detailed issue breakdown
+- **Dark Mode UI** — Clean, modern interface built with Next.js + Tailwind
 
-## Scoring Dimensions (10 x 10 = 100)
+## 🎯 Use Cases
 
-- **Vocabulary** — 50+ T1 AI words, 35+ T2 words, T3 transition clusters, clinical formality (EN + ID)
-- **Banned Phrases** — 80+ EN + 60+ ID throat-clearing openers, sycophantic phrases, rhetorical setups
-- **Structure** — 15 EN + 16 ID structural patterns: negative parallelism, tricolons, fabricated case studies
-- **Rhythm** — Sentence uniformity, burstiness, em-dash overuse, staccato fragments, adverb overuse
-- **Voice** — Sycophancy, hedge stacking, performative openers, both-sides-ism, uniform paragraphs
-- **Density** — Sentence length, passive voice %, filler words, buzzword stacking, redundant phrases
-- **Formatting** — Bold bullets, emoji headers, listicles, formulaic structures, colon-pattern titles
-- **Readability** — Wall-of-text paragraphs, avg sentence length, passive ratio, subheadings
-- **Originality** — Cliche metaphors, template patterns, overused words, generic conclusions
-- **Specificity** — Concrete numbers vs vague quantifiers, anecdotes vs generic examples, abstract nouns
+- **Content Creators** — Ensure your blog posts, articles, and social media content sound human
+- **Developers** — Check AI-generated documentation and README files
+- **Educators** — Detect AI-written student submissions
+- **Journalists** — Verify authenticity of submitted articles
+- **Indonesian Content** — Specialized detection for Indonesian AI writing patterns
 
-Each dimension scores 1-10. Total score: 100.
+## 🛠️ Tech Stack
 
-**Score interpretation:**
-- 70-100: Clean. Ready to publish.
-- 50-69: Needs work. Check issues below.
-- 30-49: Heavy AI patterns. Significant editing required.
-- Below 30: Extreme AI slop. Full rewrite recommended.
+- **Frontend**: Next.js 16, React 19, Tailwind CSS
+- **Backend**: TypeScript, Node.js
+- **Deployment**: Vercel (serverless)
+- **Detection Engine**: Custom regex-based pattern matching with tiered severity scoring
 
-## Special Features
+## 📊 Scoring System
 
-### Language Detection
-Auto-detects English, Indonesian, or mixed text. Shows flag badge on results.
+Each dimension scores 0-10 points:
 
-**Indonesian detection includes:**
-- 30+ T1 AI words (optimalisasi, sinergi, implementasi, transformasi, etc.)
-- 30+ T2 words (dinamis, terpadu, berkesinambungan, etc.)
-- 18 T3 transitions (selain itu, oleh karena itu, dengan demikian, etc.)
-- 40+ banned phrases (perlu diketahui, tidak dapat dipungkiri, di era digital, etc.)
-- 12 structural patterns (bukan X melainkan Y, tidak hanya X tetapi juga Y, etc.)
-- Clinical formality suggestions (optimalisasi → perbaikan, implementasi → penerapan, etc.)
+| Dimension | What It Detects |
+|-----------|----------------|
+| **Vocabulary** | AI overused words (delve, tapestry, pivotal, etc.) |
+| **Banned Phrases** | Throat-clearing, sycophancy, rhetorical patterns |
+| **Structure** | Negative parallelism, tricolons, dramatic countdowns |
+| **Rhythm** | Sentence uniformity, burstiness, em dash overuse |
+| **Voice** | Sycophancy, hedging, performative openers |
+| **Density** | Passive voice, filler words, buzzword stacking |
+| **Formatting** | Bold-first bullets, formulaic structure |
+| **Readability** | Wall-of-text, single-sentence paragraphs |
+| **Originality** | Overused metaphors, template patterns |
+| **Specificity** | Vague quantifiers, generic examples |
 
-### Model Fingerprint Detection
-Identifies which AI model likely generated the text based on vocabulary patterns:
-- **GPT markers**: delve, underscore, commendable, meticulous, groundbreaking
-- **Claude markers**: meaningfully, "the distinction is worth examining", "I notice that"
-- **Gemini markers**: "the way for", "the cascade of", "let's explore"
+## 🇮🇩 Indonesian Language Features
 
-### Slop Density Score
-Uses the density formula from slop-cop: `(H×3 + M×1 + L×0.25) / 500 words`
-- 0-2: PASS
-- 2-5: LOW
-- 5-10: MEDIUM
-- 10-18: HIGH
-- 18+: CRITICAL
+- **Tier 1-3 AI Words** — Formal/bureaucratic words AI overuses in Indonesian
+- **Banned Phrases** — ChatGPT-style openers and closers in Indonesian
+- **Structural Patterns** — "Bukan X, melainkan Y", "Tidak hanya X, tetapi juga Y"
+- **Casual Authenticity** — Detects register mismatch (formal/scientific mixed with slang)
+- **Sambil Chains** — Detects AI stacking simultaneous actions
 
-### Tiered Severity System
-- **Tier 1** (strongest AI signals): delve, tapestry, leverage, pivotal, groundbreaking, etc.
-- **Tier 2** (moderate): crucial, vibrant, foster, holistic, innovative, dynamic, etc.
-- **Tier 3** (transitions): furthermore, moreover, additionally, consequently, etc.
-
-## Stack
-
-- Next.js 16
-- React 19
-- Tailwind CSS 4
-- shadcn/ui
-- TypeScript
-
-## Run locally
+## 🚀 Quick Start
 
 ```bash
+# Clone
 git clone https://github.com/iyop666/slop-edge.git
 cd slop-edge
+
+# Install
 npm install
+
+# Run
 npm run dev
+
+# Build
+npm run build
 ```
 
-Open http://localhost:3000
+## 📈 API Usage
 
-## Deploy
+```typescript
+import { analyzeText } from '@/lib/scorer';
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/iyop666/slop-edge)
+const result = analyzeText("Your text here...");
+console.log(result.total); // Score out of 100
+console.log(result.scores); // Per-dimension scores
+console.log(result.tier1Hits); // AI word matches
+```
 
-## Credits
+## 🌟 Why Slop Edge?
 
-Detection rules merged from:
-- [stop-slop](https://github.com/hardikpandya/stop-slop) by [Hardik Pandya](https://github.com/hardikpandya)
-- [claude-slop-detector](https://github.com/aplaceforallmystuff/claude-slop-detector)
-- [humanize-writing-skill](https://github.com/lguz/humanize-writing-skill)
-- [slop-cop](https://github.com/MahmoudHalat/slop-cop)
+Unlike generic AI detectors that just look for "AI words", Slop Edge uses:
 
-## License
+1. **Multi-language pattern matching** — English + Indonesian
+2. **Structural analysis** — Detects AI writing patterns, not just vocabulary
+3. **Rhythm analysis** — Checks sentence variation and burstiness
+4. **Casual authenticity** — Detects when AI tries too hard to sound human
+5. **Model fingerprints** — Identifies specific AI model patterns
 
-MIT
+## 📝 License
+
+MIT License - feel free to use, modify, and distribute.
+
+## 🤝 Contributing
+
+Contributions welcome! Please read the contributing guide first.
+
+## 📧 Contact
+
+Built by [@iyop666](https://github.com/iyop666) — Indonesian developer building AI tools for content authenticity.
+
+---
+
+**Live**: https://slop-edge.vercel.app  
+**GitHub**: https://github.com/iyop666/slop-edge
