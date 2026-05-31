@@ -722,6 +722,63 @@ function analyzeFormatting(text: string): ScoreResult {
   return { dimension: "Formatting", score: Math.max(1, score), maxScore: 10, severity: score <= 4 ? "critical" : score <= 6 ? "high" : score <= 8 ? "medium" : "low", issues };
 }
 
+// ============================================================
+// NEW DIMENSION: Casual Authenticity (AI "trying too hard")
+// ============================================================
+function analyzeCasualAuthenticity(text: string): ScoreResult {
+  const issues: string[] = [];
+  let score = 10;
+  const lang = detectLanguage(text);
+
+  if (lang !== "id" && lang !== "mixed") {
+    return { dimension: "Casual Authenticity", score: 10, maxScore: 10, severity: "low", issues: ["Not Indonesian text, skipping"] };
+  }
+
+  const lower = text.toLowerCase();
+
+  // 1. Check for formal/scientific words mixed with slang (register mismatch)
+  const formalWords = ["glukosa", "neuron", "sirkuit", "kalkulasi", "mengkalkulasi", "paradoks", "kompleksitas", "romansa", "komedi", "komedian"];
+  const slangWords = ["gua", "lu", "gak", "kagak", "dong", "sih", "nih", "aja", "doang", "emang", "nyantai", "cabut", "ngebuka"];
+  
+  const formalHits = formalWords.filter(w => lower.includes(w));
+  const slangHits = slangWords.filter(w => lower.includes(w));
+  
+  if (formalHits.length > 0 && slangHits.length > 0) {
+    score -= 4;
+    issues.push(`Register mismatch: formal/scientific (${formalHits.join(", ")}) mixed with slang (${slangHits.slice(0, 3).join(", ")})`);
+  }
+
+  // 2. Check for "sambil" chains (stacking simultaneous actions - AI loves this)
+  const sambilCount = (text.match(/\bsambil\b/gi) || []).length;
+  if (sambilCount >= 3) {
+    score -= 2;
+    issues.push(`"sambil" chain (${sambilCount}x) - AI stacking simultaneous actions`);
+  }
+
+  // 3. Check for too many descriptive clauses in short text
+  const commaCount = (text.match(/,/g) || []).length;
+  const wordCount = text.split(/\s+/).length;
+  if (commaCount >= 5 && wordCount < 80) {
+    score -= 2;
+    issues.push(`Too many commas (${commaCount}) for short text (${wordCount} words) - AI over-punctuating`);
+  }
+
+  // 4. Check for "yang + [adjective]" chains (AI over-describing)
+  const yangChains = (text.match(/\byang\b/gi) || []).length;
+  if (yangChains >= 4 && wordCount < 100) {
+    score -= 1;
+    issues.push(`"yang" overuse (${yangChains}x in ${wordCount} words) - AI over-describing`);
+  }
+
+  return { 
+    dimension: "Casual Authenticity", 
+    score: Math.max(1, score), 
+    maxScore: 10, 
+    severity: score <= 4 ? "critical" : score <= 6 ? "high" : score <= 8 ? "medium" : "low", 
+    issues 
+  };
+}
+
 function analyzeReadability(text: string): ScoreResult {
   const issues: string[] = [];
   let score = 10;
@@ -918,8 +975,9 @@ export function analyzeText(text: string): AnalysisResult {
         { dimension: "Readability", score: 0, maxScore: 10, severity: "low", issues: [] },
         { dimension: "Originality", score: 0, maxScore: 10, severity: "low", issues: [] },
         { dimension: "Specificity", score: 0, maxScore: 10, severity: "low", issues: [] },
+        { dimension: "Casual Authenticity", score: 0, maxScore: 10, severity: "low", issues: [] },
       ],
-      total: 0, maxTotal: 70, language: "en",
+      total: 0, maxTotal: 110, language: "en",
       tier1Hits: [], tier2Hits: [], tier3Hits: [],
       structuralTells: [], formattingTells: [],
       modelFingerprints: [], passiveVoice: [],
@@ -940,6 +998,7 @@ export function analyzeText(text: string): AnalysisResult {
     analyzeReadability(text),
     analyzeOriginality(text),
     analyzeSpecificity(text),
+    analyzeCasualAuthenticity(text), // NEW: detect AI "trying too hard to be casual"
   ];
 
   const total = scores.reduce((acc, s) => acc + s.score, 0);
